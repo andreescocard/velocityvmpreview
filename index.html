@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Velocity VM → HTML (Preview)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 16px; display: grid; gap: 16px; }
+    textarea, pre, iframe { width: 100%; }
+    textarea { height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .out { border: 1px solid #4444; border-radius: 8px; padding: 12px; background: #fafafa; }
+    button { padding: 10px 14px; border-radius: 8px; border: 1px solid #3333; cursor: pointer; }
+    iframe { height: 260px; border: 1px solid #4444; border-radius: 8px; background: white; }
+  </style>
+</head>
+<body>
+  <h1>Velocity .vm → Preview (HTML)</h1>
+
+  <div class="row">
+    <div>
+      <h3>Template (.vm)</h3>
+      <textarea id="vm"></textarea>
+    </div>
+    <div>
+      <h3>Contexto (JSON)</h3>
+      <textarea id="json"></textarea>
+    </div>
+  </div>
+
+  <div><button id="render">Renderizar</button></div>
+
+  <div class="row">
+    <div class="out">
+      <h3>HTML gerado</h3>
+      <pre id="out"></pre>
+    </div>
+   
+  </div>
+ <div>
+      <h3>Preview vivo</h3>
+      <iframe id="frame"></iframe>
+    </div>
+  <script type="module">
+    import * as Velocity from "https://esm.sh/velocityjs@2.0.6?bundle";
+
+    // seu snippet (ajuste no #if: sem ${} dentro do #if)
+    const defaultVm = ``;
+
+    // contexto simulado
+    const defaultCtx = {
+    
+    };
+
+    const $ = (id) => document.getElementById(id);
+    $("vm").value = defaultVm;
+    $("json").value = JSON.stringify(defaultCtx, null, 2);
+
+    function renderNow() {
+      try {
+        const tpl = $("vm").value;
+        const data = JSON.parse($("json").value);
+        const html = Velocity.render(tpl, data);
+        $("out").textContent = html;
+
+        const frame = $("frame");
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        doc.open(); doc.write(html); doc.close();
+      } catch (e) {
+        $("out").textContent = "Erro: " + (e?.message || e);
+      }
+    }
+
+    $("render").onclick = renderNow;
+    renderNow(); // render inicial
+  </script>
+</body>
+</html>
