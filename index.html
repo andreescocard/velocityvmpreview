@@ -2,59 +2,613 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <title>Velocity VM → HTML (Preview)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Velocity VM Preview - Template Tester</title>
+  
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
   <style>
-    body { font-family: system-ui, sans-serif; margin: 16px; display: grid; gap: 16px; }
-    textarea, pre, iframe { width: 100%; }
-    textarea { height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .out { border: 1px solid #4444; border-radius: 8px; padding: 12px; background: #fafafa; }
-    button { padding: 10px 14px; border-radius: 8px; border: 1px solid #3333; cursor: pointer; }
-    iframe { height: 260px; border: 1px solid #4444; border-radius: 8px; background: white; }
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #6c757d;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+    
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #0a58ca 100%);
+      box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    }
+    
+    .editor-card {
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .editor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
+    
+    textarea {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      resize: vertical;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+    }
+    
+    textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .output-section {
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 300px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .output-section pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: white;
+    }
+    
+    .ai-section {
+      background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%);
+      border: 1px solid #b6d4fe;
+    }
+    
+    .badge-version {
+      background-color: rgba(255,255,255,0.2);
+      color: white;
+      padding: 0.35em 0.65em;
+      font-weight: 500;
+    }
+    
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+      border-width: 0.15em;
+    }
+    
+    .btn-action {
+      min-width: 140px;
+    }
+    
+    .insights-card {
+      background-color: #fff;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .example-btn {
+      cursor: pointer;
+    }
+    
+    .alert-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+    }
   </style>
 </head>
 <body>
-  <h1>Velocity .vm → Preview (HTML)</h1>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        <i class="bi bi-lightning-charge-fill"></i>
+        Velocity VM Preview
+        <span class="badge badge-version ms-2">v1.0.0</span>
+      </span>
+      <div class="d-flex">
+        <a href="https://velocity.apache.org/engine/devel/user-guide.html" target="_blank" class="btn btn-outline-light btn-sm me-2">
+          <i class="bi bi-book"></i> Documentação Velocity
+        </a>
+        <a href="README.md" target="_blank" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-question-circle"></i> Ajuda
+        </a>
+      </div>
+    </div>
+  </nav>
 
-  <div class="row">
-    <div>
-      <h3>Template (.vm)</h3>
-      <textarea id="vm"></textarea>
+  <!-- Alert Container -->
+  <div class="alert-container" id="alertContainer"></div>
+
+  <div class="container-fluid">
+    
+    <!-- Editor Section -->
+    <div class="row g-3 mb-3">
+      <!-- Template VM -->
+      <div class="col-12 col-lg-6">
+        <div class="card editor-card h-100">
+          <div class="card-header bg-primary text-white">
+            <i class="bi bi-file-code"></i> Template Velocity (.vm)
+          </div>
+          <div class="card-body">
+            <textarea 
+              id="vm" 
+              class="form-control" 
+              rows="12" 
+              placeholder="Digite ou cole seu template Velocity aqui...&#10;&#10;Exemplo:&#10;<h1>Olá, $nome!</h1>&#10;#if($premium)&#10;  <p>Cliente premium!</p>&#10;#end"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Context JSON -->
+      <div class="col-12 col-lg-6">
+        <div class="card editor-card h-100">
+          <div class="card-header bg-success text-white">
+            <i class="bi bi-braces"></i> Contexto JSON
+          </div>
+          <div class="card-body">
+            <textarea 
+              id="json" 
+              class="form-control" 
+              rows="12"
+              placeholder="Insira o contexto JSON aqui...&#10;&#10;Exemplo:&#10;{&#10;  &quot;nome&quot;: &quot;João&quot;,&#10;  &quot;premium&quot;: true&#10;}"
+            ></textarea>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <h3>Contexto (JSON)</h3>
-      <textarea id="json"></textarea>
+
+    <!-- Action Buttons -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body d-flex flex-wrap gap-2 justify-content-center">
+            <button id="render" class="btn btn-primary btn-lg btn-action">
+              <i class="bi bi-play-fill"></i> Renderizar
+            </button>
+            <button id="clear" class="btn btn-secondary btn-action">
+              <i class="bi bi-x-circle"></i> Limpar Tudo
+            </button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-info dropdown-toggle btn-action" data-bs-toggle="dropdown">
+                <i class="bi bi-folder-open"></i> Carregar Exemplo
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item example-btn" data-example="order">📦 Order Confirmation</a></li>
+                <li><a class="dropdown-item example-btn" data-example="products">🛒 Product Catalog</a></li>
+                <li><a class="dropdown-item example-btn" data-example="conditional">🔀 Customer Segmentation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item example-btn" data-example="password">🔐 Password Recovery</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- AI Section (Collapsible) -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="card ai-section">
+          <div class="card-header" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#aiSection">
+            <h5 class="mb-0">
+              <i class="bi bi-robot"></i> Assistente IA (OpenRouter)
+              <small class="text-muted ms-2">- Clique para expandir/recolher</small>
+            </h5>
+          </div>
+          <div class="collapse" id="aiSection">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label for="apiKey" class="form-label">
+                    <i class="bi bi-key"></i> API Key do OpenRouter
+                  </label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    id="apiKey" 
+                    placeholder="sk-or-v1-..."
+                  >
+                  <small class="text-muted">
+                    <i class="bi bi-shield-lock"></i> Nunca salva, apenas em memória. 
+                    <a href="https://openrouter.ai/keys" target="_blank">Obter chave</a>
+                  </small>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="modelSelect" class="form-label">
+                    <i class="bi bi-cpu"></i> Modelo de IA
+                  </label>
+                  <select class="form-select" id="modelSelect">
+                    <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (FREE ⭐)</option>
+                    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (Top Tier)</option>
+                    <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="google/gemini-pro-1.5">Gemini 1.5 Pro</option>
+                    <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
+                    <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <div class="d-flex gap-2 flex-wrap">
+                    <button id="generateContext" class="btn btn-outline-primary">
+                      <i class="bi bi-magic"></i> Gerar Contexto JSON
+                    </button>
+                    <button id="getInsights" class="btn btn-outline-info">
+                      <i class="bi bi-lightbulb"></i> Obter Insights sobre Template
+                    </button>
+                  </div>
+                </div>
+                <div class="col-12" id="insightsContainer" style="display: none;">
+                  <div class="card insights-card">
+                    <div class="card-header">
+                      <strong><i class="bi bi-stars"></i> Insights da IA</strong>
+                    </div>
+                    <div class="card-body">
+                      <div id="insightsContent"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="row g-3 mb-4">
+      <!-- HTML Generated -->
+      <div class="col-12 col-lg-6">
+        <div class="card">
+          <div class="card-header bg-warning">
+            <i class="bi bi-code-slash"></i> HTML Gerado
+            <button id="copyHtml" class="btn btn-sm btn-outline-dark float-end">
+              <i class="bi bi-clipboard"></i> Copiar
+            </button>
+          </div>
+          <div class="card-body p-0">
+            <div class="output-section">
+              <pre id="out"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Live Preview -->
+      <div class="col-12 col-lg-6">
+        <div class="card">
+          <div class="card-header bg-info text-white">
+            <i class="bi bi-eye"></i> Preview Renderizado
+          </div>
+          <div class="card-body">
+            <iframe id="frame"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div><button id="render">Renderizar</button></div>
-
-  <div class="row">
-    <div class="out">
-      <h3>HTML gerado</h3>
-      <pre id="out"></pre>
-    </div>
-   
-  </div>
- <div>
-      <h3>Preview vivo</h3>
-      <iframe id="frame"></iframe>
-    </div>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Application Script -->
   <script type="module">
     import * as Velocity from "https://esm.sh/velocityjs@2.0.6?bundle";
 
-    // seu snippet (ajuste no #if: sem ${} dentro do #if)
-    const defaultVm = ``;
-
-    // contexto simulado
-    const defaultCtx = {
+    // Pre-defined examples (SAP Commerce Cloud use cases)
+    const examples = {
+      password: {
+        vm: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { color: #0070d2; }
+    .btn { display: inline-block; background: #0070d2; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin: 15px 0; }
+    .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Password Reset Request</h1>
+    <p>Hello <strong>$customer.firstName</strong>,</p>
+    <p>We received a request to reset your password for account:</p>
+    <p><code>$customer.uid</code></p>
+    <p>Click the button below to reset your password:</p>
+    <a href="$resetLink" class="btn">Reset Password</a>
+    <p><small>This link expires in <strong>$expiryHours hours</strong>.</small></p>
+    <div class="warning">
+      ⚠️ If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
+    </div>
+    <hr>
+    <small>SAP Commerce Cloud - Velocity VM Preview Demo</small>
+  </div>
+</body>
+</html>`,
+        json: {
+          customer: {
+            firstName: "John",
+            uid: "john.doe@example.com"
+          },
+          resetLink: "https://shop.example.com/reset?token=abc123xyz",
+          expiryHours: 24
+        }
+      },
+      products: {
+        vm: `<div style="font-family: Arial; padding: 20px;">
+  <h2>Featured Products</h2>
+  <div style="display: grid; gap: 15px;">
+    #foreach($product in $products)
+      <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+        <h3 style="margin: 0 0 10px 0;">$product.name</h3>
+        <p style="color: #888; font-size: 12px;">SKU: $product.code</p>
+        <p style="color: #666;">$product.description</p>
+        <p style="font-size: 24px; color: #0070d2; margin: 10px 0;">
+          <strong>$$product.price.value</strong>
+        </p>
+        #if($product.stock.stockLevelStatus == "inStock")
+          <span style="background: #28a745; color: white; padding: 5px 10px; border-radius: 4px;">
+            ✓ In Stock
+          </span>
+        #elseif($product.stock.stockLevelStatus == "lowStock")
+          <span style="background: #ffc107; color: #000; padding: 5px 10px; border-radius: 4px;">
+            ⚠ Only $product.stock.stockLevel left!
+          </span>
+        #else
+          <span style="background: #dc3545; color: white; padding: 5px 10px; border-radius: 4px;">
+            ✗ Out of Stock
+          </span>
+        #end
+        #if($product.promotions && $product.promotions.size() > 0)
+          <p style="color: #28a745; margin: 10px 0;">🎉 $product.promotions.get(0).description</p>
+        #end
+      </div>
+    #end
+  </div>
+</div>`,
+        json: {
+          products: [
+            {
+              code: "NB-001",
+              name: "Premium Laptop",
+              description: "Intel i7, 16GB RAM, 512GB SSD",
+              price: { value: "1299.99", currencyIso: "USD" },
+              stock: { stockLevelStatus: "inStock", stockLevel: 50 },
+              promotions: [{ code: "SAVE20", description: "Save 20% today!" }]
+            },
+            {
+              code: "MS-002",
+              name: "Wireless Mouse",
+              description: "Ergonomic, 2400 DPI",
+              price: { value: "29.99", currencyIso: "USD" },
+              stock: { stockLevelStatus: "lowStock", stockLevel: 3 },
+              promotions: []
+            },
+            {
+              code: "KB-003",
+              name: "Mechanical Keyboard",
+              description: "RGB, Blue switches",
+              price: { value: "89.99", currencyIso: "USD" },
+              stock: { stockLevelStatus: "outOfStock", stockLevel: 0 },
+              promotions: []
+            }
+          ]
+        }
+      },
+      conditional: {
+        vm: `<div style="padding: 20px; font-family: Arial;">
+  <h2>Customer Dashboard</h2>
+  
+  #if($customer.segment == "VIP" && $customer.loyaltyPoints > 5000)
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+      <h3>🌟 VIP Exclusive Offer</h3>
+      <p>Dear $customer.title $customer.lastName,</p>
+      <p>You have <strong>$customer.loyaltyPoints points</strong>!</p>
+      <p>Redeem exclusive rewards now!</p>
+      <a href="$rewardsLink" style="background: gold; color: #000; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View VIP Rewards</a>
+    </div>
+  #elseif($customer.segment == "Premium")
+    <div style="background: #ffc107; padding: 20px; border-radius: 8px; margin: 15px 0;">
+      <h3>⭐ Premium Member Benefits</h3>
+      <p>Hi $customer.firstName,</p>
+      <p>Earn more points to unlock VIP status.</p>
+      <p>Current points: <strong>$customer.loyaltyPoints</strong></p>
+    </div>
+  #else
+    <div style="background: #6c757d; color: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+      <h3>Join Our Loyalty Program</h3>
+      <p>Hello $customer.firstName,</p>
+      <p>Sign up today and start earning rewards on every purchase!</p>
+      <button style="background: white; color: #6c757d; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+        Join Now
+      </button>
+    </div>
+  #end
+  
+  <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+    <p><strong>Name:</strong> $customer.firstName $customer.lastName</p>
+    <p><strong>Email:</strong> $customer.uid</p>
+    <p><strong>Segment:</strong> $customer.segment</p>
+    <p><strong>Member Since:</strong> $customer.creationDate</p>
+  </div>
+</div>`,
+        json: {
+          customer: {
+            title: "Ms.",
+            firstName: "Emily",
+            lastName: "Chen",
+            uid: "emily.chen@example.com",
+            segment: "VIP",
+            loyaltyPoints: 7500,
+            creationDate: "2022-03-15"
+          },
+          rewardsLink: "https://shop.example.com/rewards"
+        }
+      },
+      order: {
+        vm: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial; background: #f8f9fa; padding: 20px; }
+    .email-container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .header { background: #0070d2; color: white; padding: 20px; text-align: center; margin: -30px -30px 20px -30px; border-radius: 8px 8px 0 0; }
+    h1 { margin: 0; }
+    .order-summary { border: 1px solid #ddd; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    .item { border-bottom: 1px solid #eee; padding: 10px 0; }
+    .item:last-child { border-bottom: none; }
+    .total { font-size: 20px; color: #0070d2; font-weight: bold; margin-top: 15px; }
+    .promo { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>✓ Order Confirmed</h1>
+    </div>
     
+    <p>Hello <strong>$customer.firstName $customer.lastName</strong>,</p>
+    
+    <p>Thank you for your order! Order <code>#$order.code</code> has been confirmed.</p>
+    
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      
+      #foreach($entry in $order.entries)
+        <div class="item">
+          <strong>$entry.product.name</strong> (SKU: $entry.product.code)<br>
+          Quantity: $entry.quantity | Unit Price: $$entry.basePrice<br>
+          <strong>Subtotal: $$entry.totalPrice</strong>
+        </div>
+      #end
+      
+      <p class="total">Order Total: $$order.totalPrice</p>
+      
+      #if($order.appliedPromotions && $order.appliedPromotions.size() > 0)
+        <div class="promo">
+          ✓ Promotions applied: $order.appliedPromotions.get(0).description
+        </div>
+      #end
+    </div>
+    
+    #if($order.deliveryAddress)
+      <h3>Delivery Address</h3>
+      <p>
+        $order.deliveryAddress.firstName $order.deliveryAddress.lastName<br>
+        $order.deliveryAddress.line1<br>
+        #if($order.deliveryAddress.line2)
+          $order.deliveryAddress.line2<br>
+        #end
+        $order.deliveryAddress.town, $order.deliveryAddress.region $order.deliveryAddress.postalCode<br>
+        $order.deliveryAddress.country.name
+      </p>
+    #end
+    
+    <p>Estimated delivery: $order.deliveryMode.name - $order.estimatedDeliveryDate</p>
+    
+    <hr>
+    <small>Questions? Contact us at support@example.com</small>
+  </div>
+</body>
+</html>`,
+        json: {
+          customer: {
+            firstName: "Sarah",
+            lastName: "Johnson",
+            uid: "sarah.johnson@example.com"
+          },
+          order: {
+            code: "00001234",
+            created: "2024-11-23T10:30:00Z",
+            totalPrice: "1,299.98",
+            currency: { isocode: "USD", symbol: "$" },
+            entries: [
+              {
+                product: {
+                  code: "HP-001",
+                  name: "Premium Wireless Headphones",
+                  description: "Noise-canceling, 30-hour battery"
+                },
+                quantity: 1,
+                basePrice: "299.99",
+                totalPrice: "299.99"
+              },
+              {
+                product: {
+                  code: "SC-002",
+                  name: "Smartphone Case - Black",
+                  description: "Protective case with card slots"
+                },
+                quantity: 2,
+                basePrice: "24.99",
+                totalPrice: "49.98"
+              }
+            ],
+            deliveryAddress: {
+              firstName: "Sarah",
+              lastName: "Johnson",
+              line1: "123 Main Street",
+              line2: "Apt 4B",
+              town: "San Francisco",
+              region: "CA",
+              postalCode: "94102",
+              country: { isocode: "US", name: "United States" }
+            },
+            deliveryMode: {
+              code: "standard",
+              name: "Standard Delivery (3-5 business days)"
+            },
+            estimatedDeliveryDate: "Nov 28, 2024",
+            appliedPromotions: [
+              { code: "WELCOME10", description: "10% off first order" }
+            ]
+          }
+        }
+      }
     };
 
+    // Utility functions
     const $ = (id) => document.getElementById(id);
-    $("vm").value = defaultVm;
-    $("json").value = JSON.stringify(defaultCtx, null, 2);
+    
+    function showAlert(message, type = 'info') {
+      const alertContainer = $('alertContainer');
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      alertContainer.appendChild(alertDiv);
+      
+      setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 150);
+      }, 5000);
+    }
 
+    // Render function
     function renderNow() {
       try {
         const tpl = $("vm").value;
@@ -64,14 +618,184 @@
 
         const frame = $("frame");
         const doc = frame.contentDocument || frame.contentWindow.document;
-        doc.open(); doc.write(html); doc.close();
+        doc.open(); 
+        doc.write(html); 
+        doc.close();
+        
+        showAlert('<i class="bi bi-check-circle"></i> Template renderizado com sucesso!', 'success');
       } catch (e) {
-        $("out").textContent = "Erro: " + (e?.message || e);
+        $("out").textContent = "❌ Erro: " + (e?.message || e);
+        showAlert('<i class="bi bi-exclamation-triangle"></i> Erro ao renderizar: ' + (e?.message || e), 'danger');
       }
     }
 
+    // Clear function
+    function clearAll() {
+      $("vm").value = "";
+      $("json").value = "";
+      $("out").textContent = "";
+      const frame = $("frame");
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      doc.open(); 
+      doc.write(""); 
+      doc.close();
+      showAlert('<i class="bi bi-trash"></i> Tudo limpo!', 'info');
+    }
+
+    // Load example
+    function loadExample(exampleKey) {
+      const example = examples[exampleKey];
+      if (example) {
+        $("vm").value = example.vm;
+        $("json").value = JSON.stringify(example.json, null, 2);
+        showAlert(`<i class="bi bi-folder-open"></i> Exemplo "${exampleKey}" carregado!`, 'info');
+        renderNow();
+      }
+    }
+
+    // Copy HTML
+    function copyHtml() {
+      const html = $("out").textContent;
+      navigator.clipboard.writeText(html).then(() => {
+        showAlert('<i class="bi bi-clipboard-check"></i> HTML copiado para área de transferência!', 'success');
+      });
+    }
+
+    // AI Functions
+    async function callOpenRouter(messages) {
+      const apiKey = $("apiKey").value;
+      if (!apiKey) {
+        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira sua API Key do OpenRouter', 'warning');
+        return null;
+      }
+
+      const model = $("modelSelect").value;
+      
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': window.location.origin,
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: messages
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+      } catch (error) {
+        showAlert(`<i class="bi bi-exclamation-circle"></i> Erro na chamada da API: ${error.message}`, 'danger');
+        return null;
+      }
+    }
+
+    async function generateContext() {
+      const template = $("vm").value;
+      if (!template) {
+        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira um template primeiro', 'warning');
+        return;
+      }
+
+      const btn = $("generateContext");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gerando...';
+
+      const messages = [
+        {
+          role: "system",
+          content: "Você é um especialista em templates Velocity. Analise templates e gere contextos JSON apropriados."
+        },
+        {
+          role: "user",
+          content: `Analise este template Velocity e gere um objeto JSON de contexto que contenha todas as variáveis necessárias com valores de exemplo realistas e completos:\n\n${template}\n\nRetorne APENAS o JSON, sem explicações adicionais.`
+        }
+      ];
+
+      const result = await callOpenRouter(messages);
+      
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-magic"></i> Gerar Contexto JSON';
+
+      if (result) {
+        try {
+          // Extrair JSON do resultado (caso venha com markdown)
+          let jsonStr = result.trim();
+          if (jsonStr.startsWith('```')) {
+            jsonStr = jsonStr.replace(/```json?\n?/g, '').replace(/```\n?/g, '');
+          }
+          const parsed = JSON.parse(jsonStr);
+          $("json").value = JSON.stringify(parsed, null, 2);
+          showAlert('<i class="bi bi-check-circle"></i> Contexto JSON gerado com sucesso!', 'success');
+        } catch (e) {
+          showAlert(`<i class="bi bi-exclamation-circle"></i> Erro ao processar resposta da IA: ${e.message}`, 'danger');
+        }
+      }
+    }
+
+    async function getInsights() {
+      const template = $("vm").value;
+      const context = $("json").value;
+      
+      if (!template) {
+        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira um template primeiro', 'warning');
+        return;
+      }
+
+      const btn = $("getInsights");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Analisando...';
+
+      const messages = [
+        {
+          role: "system",
+          content: "Você é um especialista em templates Velocity e boas práticas de desenvolvimento. Analise templates criticamente e forneça insights valiosos."
+        },
+        {
+          role: "user",
+          content: `Analise este template Velocity e forneça insights detalhados:\n\nTEMPLATE:\n${template}\n\nCONTEXTO:\n${context}\n\nForneça:\n1. Possíveis erros ou problemas\n2. Sugestões de melhoria\n3. Boas práticas não seguidas\n4. Validações de segurança (XSS, injection, etc)\n5. Otimizações possíveis\n\nFormate a resposta em HTML simples para melhor legibilidade.`
+        }
+      ];
+
+      const result = await callOpenRouter(messages);
+      
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-lightbulb"></i> Obter Insights sobre Template';
+
+      if (result) {
+        $("insightsContent").innerHTML = result;
+        $("insightsContainer").style.display = "block";
+        showAlert('<i class="bi bi-stars"></i> Insights gerados com sucesso!', 'info');
+      }
+    }
+
+    // Event Listeners
     $("render").onclick = renderNow;
-    renderNow(); // render inicial
+    $("clear").onclick = clearAll;
+    $("copyHtml").onclick = copyHtml;
+    $("generateContext").onclick = generateContext;
+    $("getInsights").onclick = getInsights;
+
+    // Example buttons
+    document.querySelectorAll('.example-btn').forEach(btn => {
+      btn.onclick = () => loadExample(btn.dataset.example);
+    });
+
+    // Initial render with empty data
+    $("vm").value = "";
+    $("json").value = "{}";
+    
+    // Show welcome message
+    setTimeout(() => {
+      showAlert('<i class="bi bi-info-circle"></i> Bem-vindo ao Velocity VM Preview! Carregue um exemplo ou insira seu próprio template.', 'info');
+    }, 500);
   </script>
 </body>
 </html>
