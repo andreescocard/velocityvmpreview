@@ -1,75 +1,79 @@
-# Velocity VM Preview
+<div align="center">
 
-Velocity VM Preview is a lightweight browser tool for testing Apache Velocity
-templates without starting a backend service. Paste a `.vm` template, provide a
-JSON context, render it, and inspect both the generated HTML and the visual
-preview in one place.
+# ⚡ Velocity VM Preview
 
-It is especially useful for SAP Commerce Cloud teams that need to develop,
-review, or explain Velocity-based email templates and storefront fragments.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![No build step](https://img.shields.io/badge/build-none-brightgreen.svg)](#quick-start)
+[![Single file app](https://img.shields.io/badge/app-single--file-lightgrey.svg)](index.html)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/andreescocard)
 
-## Highlights
+**Preview, test, and review Apache Velocity `.vm` templates — directly in the browser.**
 
-- Render Velocity templates directly in the browser.
-- Validate template output against editable JSON context data.
-- Preview generated HTML side by side with rendered output.
-- Load practical examples for email, product listing, segmentation, and cart
-  recovery scenarios.
-- Generate JSON context and template insights with OpenRouter AI integration.
-- Run locally with no build step and no application server.
+No backend. No build step. One HTML file.
 
-## Tech Stack
+[Quick Start](#quick-start) · [Features](#features) · [Usage](#usage) · [AI Assistant](#ai-assistant) · [Roadmap](#roadmap)
 
-- [VelocityJS](https://github.com/shepherdwind/velocity.js) for Velocity parsing
-  and rendering.
-- [Bootstrap 5.3](https://getbootstrap.com/) for responsive UI components.
-- [Bootstrap Icons](https://icons.getbootstrap.com/) for interface icons.
-- Vanilla JavaScript for the application logic.
-- [OpenRouter](https://openrouter.ai/) for optional AI-assisted context
-  generation and review.
+</div>
 
-## Getting Started
+---
 
-Clone the repository and open `index.html` in a browser:
+Paste a template, provide a JSON context, render the output, and inspect both the generated HTML and the visual preview side by side.
+
+Built for **SAP Commerce Cloud** teams working with email templates, CMS fragments, personalization logic, and other Velocity-backed content.
+
+---
+
+## ✨ Features
+
+| Area | What you can do |
+|------|-----------------|
+| 🖼️ Template preview | Render Velocity templates locally in the browser |
+| 📦 JSON context | Edit and validate the data model used by the template |
+| 🔍 Output review | Compare generated HTML with the rendered iframe preview |
+| 📚 Examples | Load practical examples for orders, products, segmentation, and password reset |
+| 📤 Import / Export | Export `.vm`, `.json`, and rendered `.html`; import template and context files |
+| 🤖 AI support | Use OpenRouter to generate context data or review template quality |
+| ⚙️ Zero setup | Run as a single HTML file — no backend, no build pipeline |
+
+---
+
+## 🚀 Quick Start
 
 ```bash
 git clone https://github.com/andreescocard/velocityvmpreview.git
 cd velocityvmpreview
+```
+
+**Open directly:**
+```bash
 start index.html
 ```
 
-For development, you can also serve the directory through a local HTTP server:
-
+**Or serve locally:**
 ```bash
 npx http-server .
+# → http://localhost:8080
 ```
-
-Then open:
-
-```text
-http://localhost:8080
-```
-
-Python is also fine if you already have it installed:
 
 ```bash
 python -m http.server 8000
+# → http://localhost:8000
 ```
 
-The app loads Bootstrap, Bootstrap Icons, and VelocityJS from CDNs. Internet
-access is required unless those dependencies are vendored locally.
+> **Note:** The app loads Bootstrap, Bootstrap Icons, and VelocityJS from CDNs. Internet access required unless those are vendored locally.
 
-## How It Works
+---
 
-1. Paste or write a Velocity template in the template editor.
-2. Add the matching JSON context in the context editor.
-3. Click render to generate the final HTML.
-4. Review the raw output and rendered preview.
-5. Export the template, context, or generated HTML when needed.
-6. Optionally use the AI tools to generate missing context or inspect the
-   template for issues.
+## 📖 Usage
 
-Example template:
+1. Paste a Velocity template in the template editor
+2. Add the matching JSON context in the context editor
+3. Click **Render**
+4. Review the generated HTML and iframe preview
+5. Export the template, context, or generated HTML when needed
+6. Optionally use the AI assistant to generate context or review the template
+
+**Example template:**
 
 ```velocity
 <h1>Hello, $customer.firstName!</h1>
@@ -81,7 +85,7 @@ Example template:
 #end
 ```
 
-Example context:
+**Example context:**
 
 ```json
 {
@@ -92,24 +96,22 @@ Example context:
 }
 ```
 
-## SAP Commerce Cloud Use Cases
+---
 
-SAP Commerce Cloud projects commonly use Velocity templates for generated
-content. This preview tool helps teams test those templates before deploying
-them into a commerce environment.
+## 🏢 SAP Commerce Cloud
 
-Common scenarios include:
+SAP Commerce Cloud projects use Velocity templates for generated content. This tool lets teams test and review those templates without deploying to a commerce environment.
 
-- Transactional emails such as order confirmation, password reset, shipment
-  updates, and abandoned cart reminders.
-- CMS and storefront fragments that depend on dynamic context data.
-- Personalized content based on customer segment, cart state, stock status, or
-  promotion eligibility.
-- Developer onboarding and chapter demos for Velocity syntax and SAP Commerce
-  email flows.
-- Code review sessions where template changes need to be shown visually.
+**Common uses:**
 
-## Example: Order Confirmation Email
+- Order confirmation, password reset, shipment, and abandoned cart emails
+- CMS or storefront fragments that depend on dynamic context data
+- Personalized content based on segment, cart state, stock status, or promotion
+- Developer onboarding and chapter demos for Velocity syntax
+- Visual code review for template changes before deployment
+
+<details>
+<summary><strong>Example: Order Confirmation</strong></summary>
 
 ```velocity
 <h1>Order Confirmed</h1>
@@ -128,16 +130,6 @@ Common scenarios include:
 #end
 
 <p><strong>Total:</strong> $$order.totalPrice</p>
-
-#if($order.deliveryAddress)
-  <h2>Delivery Address</h2>
-  <p>
-    $order.deliveryAddress.line1<br>
-    $order.deliveryAddress.town,
-    $order.deliveryAddress.region
-    $order.deliveryAddress.postalCode
-  </p>
-#end
 ```
 
 ```json
@@ -151,84 +143,100 @@ Common scenarios include:
     "totalPrice": "349.97",
     "entries": [
       {
-        "product": {
-          "name": "Premium Wireless Headphones"
-        },
+        "product": { "name": "Premium Wireless Headphones" },
         "quantity": 1,
         "totalPrice": "299.99"
-      },
-      {
-        "product": {
-          "name": "Smartphone Case"
-        },
-        "quantity": 2,
-        "totalPrice": "49.98"
       }
-    ],
-    "deliveryAddress": {
-      "line1": "123 Main Street",
-      "town": "San Francisco",
-      "region": "CA",
-      "postalCode": "94102"
-    }
+    ]
   }
 }
 ```
 
-## AI Features
+</details>
 
-The OpenRouter integration is optional. When configured with an API key, it can:
+---
 
-- Generate a complete JSON context from the variables found in a template.
-- Suggest improvements for template structure and readability.
-- Flag likely syntax issues.
-- Highlight security concerns such as unsafe HTML injection.
-- Provide SAP Commerce-oriented review notes.
+## 🤖 AI Assistant
 
-The API key is kept in browser memory for the current session only. It is not
-written to disk by this application.
+OpenRouter integration is optional. When an API key is configured, the assistant can:
 
-## Project Structure
+- Generate JSON context from variables found in a template
+- Suggest readability and structure improvements
+- Flag likely syntax problems
+- Highlight security concerns such as unsafe HTML injection
+- Provide SAP Commerce-oriented review notes
+
+> The API key is kept in browser memory for the current session only — never written to disk.
+
+---
+
+## 🔒 Security Notes
+
+- Template output rendered in a **sandboxed iframe**
+- AI insight output displayed as text, not injected as HTML
+- Dynamic alert values escaped before insertion into Bootstrap alert markup
+- Intended for **local preview and developer workflows**, not as a hosted public execution service
+
+---
+
+## 🛠️ Tech Stack
+
+| Dependency | Purpose |
+|------------|---------|
+| [VelocityJS](https://github.com/shepherdwind/velocity.js) | Velocity parsing and rendering |
+| [Bootstrap 5.3](https://getbootstrap.com/) | Layout and UI components |
+| [Bootstrap Icons](https://icons.getbootstrap.com/) | Interface icons |
+| Vanilla JavaScript | Application logic |
+| [OpenRouter](https://openrouter.ai/) | Optional AI-assisted context and review |
+
+---
+
+## 📁 Project Structure
 
 ```text
 .
-|-- index.html      # Complete single-file application
-|-- README.md       # Project documentation
-|-- LICENSE         # MIT license
-|-- .gitignore      # Local ignore rules
-|-- .editorconfig   # Shared editor defaults
-|-- .gitattributes  # Text and encoding normalization
-`-- tasks/          # Local task notes and scratch work, ignored by Git
+├── index.html       # Complete single-file application
+├── README.md        # Project documentation
+├── LICENSE          # MIT license
+├── .gitignore       # Local ignore rules
+├── .editorconfig    # Shared editor defaults
+├── .gitattributes   # Text normalization
+└── tasks/           # Local task notes and scratch work (git-ignored)
 ```
 
-## Roadmap
+---
 
-- Template library with save and load support.
-- Export and import for `.vm` templates and `.json` context files.
-- Shareable links with compressed template and context data.
-- Template history stored locally in the browser.
-- Syntax highlighting for Velocity and JSON editors.
-- Light and dark themes.
-- SAP Commerce impex import helpers.
-- Automated regression tests for critical templates.
+## 🗺️ Roadmap
 
-## Contributing
+- [ ] Template library with save and load support
+- [ ] Shareable links with compressed template and context data
+- [ ] Local template history
+- [ ] Syntax highlighting for Velocity and JSON editors
+- [ ] Light and dark themes
+- [ ] SAP Commerce impex import helpers
+- [ ] Automated browser smoke tests
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Make a focused change.
-4. Test the application in a browser.
-5. Update this README when behavior or setup changes.
-6. Open a pull request with a concise description and screenshots when useful.
+---
 
-Please keep the project simple: no build step, no backend dependency, and no
-heavy framework unless the project direction changes intentionally.
+## 🤝 Contributing
 
-## License
+1. Fork the repository
+2. Create a focused feature branch
+3. Test the app in a browser
+4. Update this README when behavior or setup changes
+5. Open a pull request with a concise description and screenshots when useful
 
-This project is licensed under the MIT License. See `LICENSE` for details.
+Keep it simple: **no backend, no required build step, no heavy framework.**
 
-## Acknowledgments
+---
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
 
 - [Apache Velocity](https://velocity.apache.org/)
 - [VelocityJS](https://github.com/shepherdwind/velocity.js)
