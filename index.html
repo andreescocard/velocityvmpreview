@@ -102,6 +102,10 @@
       background-color: #fff;
       border-left: 4px solid var(--primary-color);
     }
+
+    #insightsContent {
+      white-space: pre-wrap;
+    }
     
     .example-btn {
       cursor: pointer;
@@ -202,6 +206,26 @@
             <button id="clear" class="btn btn-secondary btn-action">
               <i class="bi bi-x-circle"></i> <span data-i18n="actions.clear">Limpar Tudo</span>
             </button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-primary dropdown-toggle btn-action" data-bs-toggle="dropdown">
+                <i class="bi bi-download"></i> <span data-i18n="actions.export">Exportar</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button" id="exportVm" data-i18n="actions.exportVm">Template .vm</button></li>
+                <li><button class="dropdown-item" type="button" id="exportJson" data-i18n="actions.exportJson">Contexto .json</button></li>
+                <li><button class="dropdown-item" type="button" id="exportHtml" data-i18n="actions.exportHtml">HTML gerado</button></li>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-secondary dropdown-toggle btn-action" data-bs-toggle="dropdown">
+                <i class="bi bi-upload"></i> <span data-i18n="actions.import">Importar</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button" id="importVm" data-i18n="actions.importVm">Template .vm</button></li>
+                <li><button class="dropdown-item" type="button" id="importJson" data-i18n="actions.importJson">Contexto .json</button></li>
+              </ul>
+            </div>
+            <input type="file" id="fileImport" class="d-none" accept=".vm,.json,.txt,text/plain,application/json">
             <div class="btn-group">
               <button type="button" class="btn btn-info dropdown-toggle btn-action" data-bs-toggle="dropdown">
                 <i class="bi bi-folder-open"></i> <span data-i18n="actions.loadExample">Carregar Exemplo</span>
@@ -314,7 +338,7 @@
             <i class="bi bi-eye"></i> <span data-i18n="output.previewTitle">Preview Renderizado</span>
           </div>
           <div class="card-body">
-            <iframe id="frame"></iframe>
+            <iframe id="frame" sandbox="" referrerpolicy="no-referrer"></iframe>
           </div>
         </div>
       </div>
@@ -339,6 +363,13 @@
         "editor.contextPlaceholder": "Insert the JSON context here...\n\nExample:\n{\n  \"name\": \"John\",\n  \"premium\": true\n}",
         "actions.render": "Render",
         "actions.clear": "Clear All",
+        "actions.export": "Export",
+        "actions.exportVm": "Template .vm",
+        "actions.exportJson": "Context .json",
+        "actions.exportHtml": "Generated HTML",
+        "actions.import": "Import",
+        "actions.importVm": "Template .vm",
+        "actions.importJson": "Context .json",
         "actions.loadExample": "Load Example",
         "actions.copy": "Copy",
         "examples.order": "📦 Order Confirmation",
@@ -363,6 +394,11 @@
         "alert.clearSuccess": "Everything cleared!",
         "alert.exampleLoaded": "Example \"{example}\" loaded!",
         "alert.copySuccess": "HTML copied to clipboard!",
+        "alert.exportSuccess": "File exported successfully!",
+        "alert.importSuccess": "File imported successfully!",
+        "alert.importError": "Import error: {message}",
+        "alert.invalidJson": "Invalid JSON: {message}",
+        "alert.nothingToExport": "There is no content to export.",
         "alert.missingApiKey": "Please enter your OpenRouter API Key",
         "alert.apiError": "API call error: {message}",
         "alert.missingTemplate": "Please enter a template first",
@@ -381,6 +417,13 @@
         "editor.contextPlaceholder": "Insira o contexto JSON aqui...\n\nExemplo:\n{\n  \"nome\": \"João\",\n  \"premium\": true\n}",
         "actions.render": "Renderizar",
         "actions.clear": "Limpar Tudo",
+        "actions.export": "Exportar",
+        "actions.exportVm": "Template .vm",
+        "actions.exportJson": "Contexto .json",
+        "actions.exportHtml": "HTML gerado",
+        "actions.import": "Importar",
+        "actions.importVm": "Template .vm",
+        "actions.importJson": "Contexto .json",
         "actions.loadExample": "Carregar Exemplo",
         "actions.copy": "Copiar",
         "examples.order": "📦 Confirmação de Pedido",
@@ -405,6 +448,11 @@
         "alert.clearSuccess": "Tudo limpo!",
         "alert.exampleLoaded": "Exemplo \"{example}\" carregado!",
         "alert.copySuccess": "HTML copiado para área de transferência!",
+        "alert.exportSuccess": "Arquivo exportado com sucesso!",
+        "alert.importSuccess": "Arquivo importado com sucesso!",
+        "alert.importError": "Erro ao importar: {message}",
+        "alert.invalidJson": "JSON inválido: {message}",
+        "alert.nothingToExport": "Não há conteúdo para exportar.",
         "alert.missingApiKey": "Por favor, insira sua API Key do OpenRouter",
         "alert.apiError": "Erro na chamada da API: {message}",
         "alert.missingTemplate": "Por favor, insira um template primeiro",
@@ -423,6 +471,13 @@
         "editor.contextPlaceholder": "Inserta el contexto JSON aquí...\n\nEjemplo:\n{\n  \"nombre\": \"Juan\",\n  \"premium\": true\n}",
         "actions.render": "Renderizar",
         "actions.clear": "Limpiar Todo",
+        "actions.export": "Exportar",
+        "actions.exportVm": "Plantilla .vm",
+        "actions.exportJson": "Contexto .json",
+        "actions.exportHtml": "HTML generado",
+        "actions.import": "Importar",
+        "actions.importVm": "Plantilla .vm",
+        "actions.importJson": "Contexto .json",
         "actions.loadExample": "Cargar Ejemplo",
         "actions.copy": "Copiar",
         "examples.order": "📦 Confirmación de Pedido",
@@ -447,6 +502,11 @@
         "alert.clearSuccess": "Todo limpio!",
         "alert.exampleLoaded": "Ejemplo \"{example}\" cargado!",
         "alert.copySuccess": "HTML copiado al portapapeles!",
+        "alert.exportSuccess": "Archivo exportado correctamente!",
+        "alert.importSuccess": "Archivo importado correctamente!",
+        "alert.importError": "Error al importar: {message}",
+        "alert.invalidJson": "JSON inválido: {message}",
+        "alert.nothingToExport": "No hay contenido para exportar.",
         "alert.missingApiKey": "Ingresa tu API Key de OpenRouter",
         "alert.apiError": "Error en la llamada a la API: {message}",
         "alert.missingTemplate": "Ingresa una plantilla primero",
@@ -467,10 +527,19 @@
 
     let currentLanguage = localStorage.getItem("velocityVmPreviewLanguage") || normalizeLanguage(navigator.language);
 
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
     function t(key, values = {}) {
       let text = translations[currentLanguage]?.[key] || translations.en[key] || key;
       Object.entries(values).forEach(([name, value]) => {
-        text = text.replaceAll(`{${name}}`, value);
+        text = text.replaceAll(`{${name}}`, escapeHtml(value));
       });
       return text;
     }
@@ -790,11 +859,7 @@
         const html = Velocity.render(tpl, data);
         $("out").textContent = html;
 
-        const frame = $("frame");
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        doc.open(); 
-        doc.write(html); 
-        doc.close();
+        $("frame").srcdoc = html;
         
         showAlert(`<i class="bi bi-check-circle"></i> ${t("alert.renderSuccess")}`, 'success');
       } catch (e) {
@@ -808,11 +873,7 @@
       $("vm").value = "";
       $("json").value = "";
       $("out").textContent = "";
-      const frame = $("frame");
-      const doc = frame.contentDocument || frame.contentWindow.document;
-      doc.open(); 
-      doc.write(""); 
-      doc.close();
+      $("frame").srcdoc = "";
       showAlert(`<i class="bi bi-trash"></i> ${t("alert.clearSuccess")}`, 'info');
     }
 
@@ -833,6 +894,74 @@
       navigator.clipboard.writeText(html).then(() => {
         showAlert(`<i class="bi bi-clipboard-check"></i> ${t("alert.copySuccess")}`, 'success');
       });
+    }
+
+    function downloadFile(filename, content, type) {
+      if (!content.trim()) {
+        showAlert(`<i class="bi bi-exclamation-triangle"></i> ${t("alert.nothingToExport")}`, 'warning');
+        return;
+      }
+
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showAlert(`<i class="bi bi-download"></i> ${t("alert.exportSuccess")}`, 'success');
+    }
+
+    function exportVm() {
+      downloadFile("template.vm", $("vm").value, "text/plain;charset=utf-8");
+    }
+
+    function exportJson() {
+      try {
+        const context = $("json").value;
+        if (context.trim()) {
+          JSON.parse(context);
+        }
+        downloadFile("context.json", context, "application/json;charset=utf-8");
+      } catch (error) {
+        showAlert(`<i class="bi bi-exclamation-circle"></i> ${t("alert.invalidJson", { message: error.message })}`, 'danger');
+      }
+    }
+
+    function exportHtml() {
+      downloadFile("output.html", $("out").textContent, "text/html;charset=utf-8");
+    }
+
+    let importTarget = null;
+
+    function requestImport(target) {
+      importTarget = target;
+      const input = $("fileImport");
+      input.value = "";
+      input.accept = target === "json" ? ".json,application/json" : ".vm,.txt,text/plain";
+      input.click();
+    }
+
+    async function importSelectedFile(event) {
+      const file = event.target.files?.[0];
+      if (!file || !importTarget) return;
+
+      try {
+        const content = await file.text();
+        if (importTarget === "json") {
+          JSON.parse(content);
+          $("json").value = content;
+        } else {
+          $("vm").value = content;
+        }
+        showAlert(`<i class="bi bi-upload"></i> ${t("alert.importSuccess")}`, 'success');
+      } catch (error) {
+        showAlert(`<i class="bi bi-exclamation-circle"></i> ${t("alert.importError", { message: error.message })}`, 'danger');
+      } finally {
+        importTarget = null;
+      }
     }
 
     // AI Functions
@@ -934,7 +1063,7 @@
         },
         {
           role: "user",
-          content: `Analise este template Velocity e forneça insights detalhados:\n\nTEMPLATE:\n${template}\n\nCONTEXTO:\n${context}\n\nForneça:\n1. Possíveis erros ou problemas\n2. Sugestões de melhoria\n3. Boas práticas não seguidas\n4. Validações de segurança (XSS, injection, etc)\n5. Otimizações possíveis\n\nFormate a resposta em HTML simples para melhor legibilidade.`
+          content: `Analise este template Velocity e forneça insights detalhados:\n\nTEMPLATE:\n${template}\n\nCONTEXTO:\n${context}\n\nForneça:\n1. Possíveis erros ou problemas\n2. Sugestões de melhoria\n3. Boas práticas não seguidas\n4. Validações de segurança (XSS, injection, etc)\n5. Otimizações possíveis\n\nResponda em texto simples ou Markdown. Não use HTML.`
         }
       ];
 
@@ -944,7 +1073,7 @@
       setButtonLabel("getInsights", "bi bi-lightbulb", "ai.getInsights");
 
       if (result) {
-        $("insightsContent").innerHTML = result;
+        $("insightsContent").textContent = result;
         $("insightsContainer").style.display = "block";
         showAlert(`<i class="bi bi-stars"></i> ${t("alert.insightsSuccess")}`, 'info');
       }
@@ -954,6 +1083,12 @@
     $("render").onclick = renderNow;
     $("clear").onclick = clearAll;
     $("copyHtml").onclick = copyHtml;
+    $("exportVm").onclick = exportVm;
+    $("exportJson").onclick = exportJson;
+    $("exportHtml").onclick = exportHtml;
+    $("importVm").onclick = () => requestImport("vm");
+    $("importJson").onclick = () => requestImport("json");
+    $("fileImport").onchange = importSelectedFile;
     $("generateContext").onclick = generateContext;
     $("getInsights").onclick = getInsights;
     $("languageSwitcher").onchange = (event) => {

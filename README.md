@@ -33,7 +33,7 @@ review, or explain Velocity-based email templates and storefront fragments.
 Clone the repository and open `index.html` in a browser:
 
 ```bash
-git clone https://github.com/your-username/velocityvmpreview.git
+git clone https://github.com/andreescocard/velocityvmpreview.git
 cd velocityvmpreview
 start index.html
 ```
@@ -56,13 +56,17 @@ Python is also fine if you already have it installed:
 python -m http.server 8000
 ```
 
+The app loads Bootstrap, Bootstrap Icons, and VelocityJS from CDNs. Internet
+access is required unless those dependencies are vendored locally.
+
 ## How It Works
 
 1. Paste or write a Velocity template in the template editor.
 2. Add the matching JSON context in the context editor.
 3. Click render to generate the final HTML.
 4. Review the raw output and rendered preview.
-5. Optionally use the AI tools to generate missing context or inspect the
+5. Export the template, context, or generated HTML when needed.
+6. Optionally use the AI tools to generate missing context or inspect the
    template for issues.
 
 Example template:
@@ -190,7 +194,10 @@ written to disk by this application.
 .
 |-- index.html      # Complete single-file application
 |-- README.md       # Project documentation
+|-- LICENSE         # MIT license
 |-- .gitignore      # Local ignore rules
+|-- .editorconfig   # Shared editor defaults
+|-- .gitattributes  # Text and encoding normalization
 `-- tasks/          # Local task notes and scratch work, ignored by Git
 ```
 
