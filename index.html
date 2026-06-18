@@ -114,6 +114,11 @@
       z-index: 9999;
       max-width: 400px;
     }
+
+    .language-switcher {
+      width: auto;
+      min-width: 130px;
+    }
   </style>
 </head>
 <body>
@@ -126,12 +131,17 @@
         Velocity VM Preview
         <span class="badge badge-version ms-2">v1.0.0</span>
       </span>
-      <div class="d-flex">
+      <div class="d-flex align-items-center gap-2">
+        <select id="languageSwitcher" class="form-select form-select-sm language-switcher" aria-label="Language">
+          <option value="en">English</option>
+          <option value="ptbr">Português</option>
+          <option value="es">Español</option>
+        </select>
         <a href="https://velocity.apache.org/engine/devel/user-guide.html" target="_blank" class="btn btn-outline-light btn-sm me-2">
-          <i class="bi bi-book"></i> Documentação Velocity
+          <i class="bi bi-book"></i> <span data-i18n="nav.docs">Documentação Velocity</span>
         </a>
         <a href="README.md" target="_blank" class="btn btn-outline-light btn-sm">
-          <i class="bi bi-question-circle"></i> Ajuda
+          <i class="bi bi-question-circle"></i> <span data-i18n="nav.help">Ajuda</span>
         </a>
       </div>
     </div>
@@ -148,13 +158,14 @@
       <div class="col-12 col-lg-6">
         <div class="card editor-card h-100">
           <div class="card-header bg-primary text-white">
-            <i class="bi bi-file-code"></i> Template Velocity (.vm)
+            <i class="bi bi-file-code"></i> <span data-i18n="editor.templateTitle">Template Velocity (.vm)</span>
           </div>
           <div class="card-body">
             <textarea 
               id="vm" 
               class="form-control" 
               rows="12" 
+              data-i18n-placeholder="editor.templatePlaceholder"
               placeholder="Digite ou cole seu template Velocity aqui...&#10;&#10;Exemplo:&#10;<h1>Olá, $nome!</h1>&#10;#if($premium)&#10;  <p>Cliente premium!</p>&#10;#end"
             ></textarea>
           </div>
@@ -165,13 +176,14 @@
       <div class="col-12 col-lg-6">
         <div class="card editor-card h-100">
           <div class="card-header bg-success text-white">
-            <i class="bi bi-braces"></i> Contexto JSON
+            <i class="bi bi-braces"></i> <span data-i18n="editor.contextTitle">Contexto JSON</span>
           </div>
           <div class="card-body">
             <textarea 
               id="json" 
               class="form-control" 
               rows="12"
+              data-i18n-placeholder="editor.contextPlaceholder"
               placeholder="Insira o contexto JSON aqui...&#10;&#10;Exemplo:&#10;{&#10;  &quot;nome&quot;: &quot;João&quot;,&#10;  &quot;premium&quot;: true&#10;}"
             ></textarea>
           </div>
@@ -185,21 +197,21 @@
         <div class="card">
           <div class="card-body d-flex flex-wrap gap-2 justify-content-center">
             <button id="render" class="btn btn-primary btn-lg btn-action">
-              <i class="bi bi-play-fill"></i> Renderizar
+              <i class="bi bi-play-fill"></i> <span data-i18n="actions.render">Renderizar</span>
             </button>
             <button id="clear" class="btn btn-secondary btn-action">
-              <i class="bi bi-x-circle"></i> Limpar Tudo
+              <i class="bi bi-x-circle"></i> <span data-i18n="actions.clear">Limpar Tudo</span>
             </button>
             <div class="btn-group">
               <button type="button" class="btn btn-info dropdown-toggle btn-action" data-bs-toggle="dropdown">
-                <i class="bi bi-folder-open"></i> Carregar Exemplo
+                <i class="bi bi-folder-open"></i> <span data-i18n="actions.loadExample">Carregar Exemplo</span>
               </button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item example-btn" data-example="order">📦 Order Confirmation</a></li>
-                <li><a class="dropdown-item example-btn" data-example="products">🛒 Product Catalog</a></li>
-                <li><a class="dropdown-item example-btn" data-example="conditional">🔀 Customer Segmentation</a></li>
+                <li><a class="dropdown-item example-btn" data-example="order" data-i18n="examples.order">📦 Order Confirmation</a></li>
+                <li><a class="dropdown-item example-btn" data-example="products" data-i18n="examples.products">🛒 Product Catalog</a></li>
+                <li><a class="dropdown-item example-btn" data-example="conditional" data-i18n="examples.conditional">🔀 Customer Segmentation</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item example-btn" data-example="password">🔐 Password Recovery</a></li>
+                <li><a class="dropdown-item example-btn" data-example="password" data-i18n="examples.password">🔐 Password Recovery</a></li>
               </ul>
             </div>
           </div>
@@ -213,8 +225,8 @@
         <div class="card ai-section">
           <div class="card-header" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#aiSection">
             <h5 class="mb-0">
-              <i class="bi bi-robot"></i> Assistente IA (OpenRouter)
-              <small class="text-muted ms-2">- Clique para expandir/recolher</small>
+              <i class="bi bi-robot"></i> <span data-i18n="ai.title">Assistente IA (OpenRouter)</span>
+              <small class="text-muted ms-2" data-i18n="ai.toggleHint">- Clique para expandir/recolher</small>
             </h5>
           </div>
           <div class="collapse" id="aiSection">
@@ -222,7 +234,7 @@
               <div class="row g-3">
                 <div class="col-12 col-md-6">
                   <label for="apiKey" class="form-label">
-                    <i class="bi bi-key"></i> API Key do OpenRouter
+                    <i class="bi bi-key"></i> <span data-i18n="ai.apiKey">API Key do OpenRouter</span>
                   </label>
                   <input 
                     type="password" 
@@ -231,13 +243,13 @@
                     placeholder="sk-or-v1-..."
                   >
                   <small class="text-muted">
-                    <i class="bi bi-shield-lock"></i> Nunca salva, apenas em memória. 
-                    <a href="https://openrouter.ai/keys" target="_blank">Obter chave</a>
+                    <i class="bi bi-shield-lock"></i> <span data-i18n="ai.keySafety">Nunca salva, apenas em memória.</span> 
+                    <a href="https://openrouter.ai/keys" target="_blank" data-i18n="ai.getKey">Obter chave</a>
                   </small>
                 </div>
                 <div class="col-12 col-md-6">
                   <label for="modelSelect" class="form-label">
-                    <i class="bi bi-cpu"></i> Modelo de IA
+                    <i class="bi bi-cpu"></i> <span data-i18n="ai.model">Modelo de IA</span>
                   </label>
                   <select class="form-select" id="modelSelect">
                     <option value="z-ai/glm-4.5-air:free">GLM-4.5 FREE ⭐ (Recommended)</option>
@@ -252,17 +264,17 @@
                 <div class="col-12">
                   <div class="d-flex gap-2 flex-wrap">
                     <button id="generateContext" class="btn btn-outline-primary">
-                      <i class="bi bi-magic"></i> Gerar Contexto JSON
+                      <i class="bi bi-magic"></i> <span data-i18n="ai.generateContext">Gerar Contexto JSON</span>
                     </button>
                     <button id="getInsights" class="btn btn-outline-info">
-                      <i class="bi bi-lightbulb"></i> Obter Insights sobre Template
+                      <i class="bi bi-lightbulb"></i> <span data-i18n="ai.getInsights">Obter Insights sobre Template</span>
                     </button>
                   </div>
                 </div>
                 <div class="col-12" id="insightsContainer" style="display: none;">
                   <div class="card insights-card">
                     <div class="card-header">
-                      <strong><i class="bi bi-stars"></i> Insights da IA</strong>
+                      <strong><i class="bi bi-stars"></i> <span data-i18n="ai.insightsTitle">Insights da IA</span></strong>
                     </div>
                     <div class="card-body">
                       <div id="insightsContent"></div>
@@ -282,9 +294,9 @@
       <div class="col-12 col-lg-6">
         <div class="card">
           <div class="card-header bg-warning">
-            <i class="bi bi-code-slash"></i> HTML Gerado
+            <i class="bi bi-code-slash"></i> <span data-i18n="output.htmlTitle">HTML Gerado</span>
             <button id="copyHtml" class="btn btn-sm btn-outline-dark float-end">
-              <i class="bi bi-clipboard"></i> Copiar
+              <i class="bi bi-clipboard"></i> <span data-i18n="actions.copy">Copiar</span>
             </button>
           </div>
           <div class="card-body p-0">
@@ -299,7 +311,7 @@
       <div class="col-12 col-lg-6">
         <div class="card">
           <div class="card-header bg-info text-white">
-            <i class="bi bi-eye"></i> Preview Renderizado
+            <i class="bi bi-eye"></i> <span data-i18n="output.previewTitle">Preview Renderizado</span>
           </div>
           <div class="card-body">
             <iframe id="frame"></iframe>
@@ -316,6 +328,167 @@
   <!-- Application Script -->
   <script type="module">
     import * as Velocity from "https://esm.sh/velocityjs@2.0.6?bundle";
+
+    const translations = {
+      en: {
+        "nav.docs": "Velocity Docs",
+        "nav.help": "Help",
+        "editor.templateTitle": "Velocity Template (.vm)",
+        "editor.templatePlaceholder": "Type or paste your Velocity template here...\n\nExample:\n<h1>Hello, $name!</h1>\n#if($premium)\n  <p>Premium customer!</p>\n#end",
+        "editor.contextTitle": "JSON Context",
+        "editor.contextPlaceholder": "Insert the JSON context here...\n\nExample:\n{\n  \"name\": \"John\",\n  \"premium\": true\n}",
+        "actions.render": "Render",
+        "actions.clear": "Clear All",
+        "actions.loadExample": "Load Example",
+        "actions.copy": "Copy",
+        "examples.order": "📦 Order Confirmation",
+        "examples.products": "🛒 Product Catalog",
+        "examples.conditional": "🔀 Customer Segmentation",
+        "examples.password": "🔐 Password Recovery",
+        "ai.title": "AI Assistant (OpenRouter)",
+        "ai.toggleHint": "- Click to expand/collapse",
+        "ai.apiKey": "OpenRouter API Key",
+        "ai.keySafety": "Never saved, only kept in memory.",
+        "ai.getKey": "Get key",
+        "ai.model": "AI Model",
+        "ai.generateContext": "Generate JSON Context",
+        "ai.getInsights": "Get Template Insights",
+        "ai.insightsTitle": "AI Insights",
+        "ai.generating": "Generating...",
+        "ai.analyzing": "Analyzing...",
+        "output.htmlTitle": "Generated HTML",
+        "output.previewTitle": "Rendered Preview",
+        "alert.renderSuccess": "Template rendered successfully!",
+        "alert.renderError": "Render error: {message}",
+        "alert.clearSuccess": "Everything cleared!",
+        "alert.exampleLoaded": "Example \"{example}\" loaded!",
+        "alert.copySuccess": "HTML copied to clipboard!",
+        "alert.missingApiKey": "Please enter your OpenRouter API Key",
+        "alert.apiError": "API call error: {message}",
+        "alert.missingTemplate": "Please enter a template first",
+        "alert.contextSuccess": "JSON context generated successfully!",
+        "alert.aiParseError": "Error processing AI response: {message}",
+        "alert.insightsSuccess": "Insights generated successfully!",
+        "alert.welcome": "Welcome to Velocity VM Preview! Load an example or insert your own template.",
+        "error.prefix": "❌ Error: "
+      },
+      ptbr: {
+        "nav.docs": "Documentação Velocity",
+        "nav.help": "Ajuda",
+        "editor.templateTitle": "Template Velocity (.vm)",
+        "editor.templatePlaceholder": "Digite ou cole seu template Velocity aqui...\n\nExemplo:\n<h1>Olá, $nome!</h1>\n#if($premium)\n  <p>Cliente premium!</p>\n#end",
+        "editor.contextTitle": "Contexto JSON",
+        "editor.contextPlaceholder": "Insira o contexto JSON aqui...\n\nExemplo:\n{\n  \"nome\": \"João\",\n  \"premium\": true\n}",
+        "actions.render": "Renderizar",
+        "actions.clear": "Limpar Tudo",
+        "actions.loadExample": "Carregar Exemplo",
+        "actions.copy": "Copiar",
+        "examples.order": "📦 Confirmação de Pedido",
+        "examples.products": "🛒 Catálogo de Produtos",
+        "examples.conditional": "🔀 Segmentação de Cliente",
+        "examples.password": "🔐 Recuperação de Senha",
+        "ai.title": "Assistente IA (OpenRouter)",
+        "ai.toggleHint": "- Clique para expandir/recolher",
+        "ai.apiKey": "API Key do OpenRouter",
+        "ai.keySafety": "Nunca salva, apenas em memória.",
+        "ai.getKey": "Obter chave",
+        "ai.model": "Modelo de IA",
+        "ai.generateContext": "Gerar Contexto JSON",
+        "ai.getInsights": "Obter Insights sobre Template",
+        "ai.insightsTitle": "Insights da IA",
+        "ai.generating": "Gerando...",
+        "ai.analyzing": "Analisando...",
+        "output.htmlTitle": "HTML Gerado",
+        "output.previewTitle": "Preview Renderizado",
+        "alert.renderSuccess": "Template renderizado com sucesso!",
+        "alert.renderError": "Erro ao renderizar: {message}",
+        "alert.clearSuccess": "Tudo limpo!",
+        "alert.exampleLoaded": "Exemplo \"{example}\" carregado!",
+        "alert.copySuccess": "HTML copiado para área de transferência!",
+        "alert.missingApiKey": "Por favor, insira sua API Key do OpenRouter",
+        "alert.apiError": "Erro na chamada da API: {message}",
+        "alert.missingTemplate": "Por favor, insira um template primeiro",
+        "alert.contextSuccess": "Contexto JSON gerado com sucesso!",
+        "alert.aiParseError": "Erro ao processar resposta da IA: {message}",
+        "alert.insightsSuccess": "Insights gerados com sucesso!",
+        "alert.welcome": "Bem-vindo ao Velocity VM Preview! Carregue um exemplo ou insira seu próprio template.",
+        "error.prefix": "❌ Erro: "
+      },
+      es: {
+        "nav.docs": "Documentación Velocity",
+        "nav.help": "Ayuda",
+        "editor.templateTitle": "Plantilla Velocity (.vm)",
+        "editor.templatePlaceholder": "Escribe o pega tu plantilla Velocity aquí...\n\nEjemplo:\n<h1>Hola, $nombre!</h1>\n#if($premium)\n  <p>Cliente premium!</p>\n#end",
+        "editor.contextTitle": "Contexto JSON",
+        "editor.contextPlaceholder": "Inserta el contexto JSON aquí...\n\nEjemplo:\n{\n  \"nombre\": \"Juan\",\n  \"premium\": true\n}",
+        "actions.render": "Renderizar",
+        "actions.clear": "Limpiar Todo",
+        "actions.loadExample": "Cargar Ejemplo",
+        "actions.copy": "Copiar",
+        "examples.order": "📦 Confirmación de Pedido",
+        "examples.products": "🛒 Catálogo de Productos",
+        "examples.conditional": "🔀 Segmentación de Cliente",
+        "examples.password": "🔐 Recuperación de Contraseña",
+        "ai.title": "Asistente IA (OpenRouter)",
+        "ai.toggleHint": "- Haz clic para expandir/contraer",
+        "ai.apiKey": "API Key de OpenRouter",
+        "ai.keySafety": "Nunca se guarda, solo queda en memoria.",
+        "ai.getKey": "Obtener clave",
+        "ai.model": "Modelo de IA",
+        "ai.generateContext": "Generar Contexto JSON",
+        "ai.getInsights": "Obtener Insights de la Plantilla",
+        "ai.insightsTitle": "Insights de IA",
+        "ai.generating": "Generando...",
+        "ai.analyzing": "Analizando...",
+        "output.htmlTitle": "HTML Generado",
+        "output.previewTitle": "Preview Renderizado",
+        "alert.renderSuccess": "Plantilla renderizada correctamente!",
+        "alert.renderError": "Error al renderizar: {message}",
+        "alert.clearSuccess": "Todo limpio!",
+        "alert.exampleLoaded": "Ejemplo \"{example}\" cargado!",
+        "alert.copySuccess": "HTML copiado al portapapeles!",
+        "alert.missingApiKey": "Ingresa tu API Key de OpenRouter",
+        "alert.apiError": "Error en la llamada a la API: {message}",
+        "alert.missingTemplate": "Ingresa una plantilla primero",
+        "alert.contextSuccess": "Contexto JSON generado correctamente!",
+        "alert.aiParseError": "Error al procesar la respuesta de IA: {message}",
+        "alert.insightsSuccess": "Insights generados correctamente!",
+        "alert.welcome": "Bienvenido a Velocity VM Preview! Carga un ejemplo o inserta tu propia plantilla.",
+        "error.prefix": "❌ Error: "
+      }
+    };
+
+    const normalizeLanguage = (language) => {
+      const normalized = (language || "").toLowerCase();
+      if (normalized.startsWith("pt")) return "ptbr";
+      if (normalized.startsWith("es")) return "es";
+      return "en";
+    };
+
+    let currentLanguage = localStorage.getItem("velocityVmPreviewLanguage") || normalizeLanguage(navigator.language);
+
+    function t(key, values = {}) {
+      let text = translations[currentLanguage]?.[key] || translations.en[key] || key;
+      Object.entries(values).forEach(([name, value]) => {
+        text = text.replaceAll(`{${name}}`, value);
+      });
+      return text;
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLanguage === "ptbr" ? "pt-BR" : currentLanguage;
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        element.innerHTML = t(element.dataset.i18n);
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+        element.placeholder = t(element.dataset.i18nPlaceholder);
+      });
+      $("languageSwitcher").value = currentLanguage;
+    }
+
+    function setButtonLabel(buttonId, iconClass, labelKey) {
+      $(buttonId).innerHTML = `<i class="${iconClass}"></i> <span data-i18n="${labelKey}">${t(labelKey)}</span>`;
+    }
 
     // Pre-defined examples (SAP Commerce Cloud use cases)
     const examples = {
@@ -623,10 +796,10 @@
         doc.write(html); 
         doc.close();
         
-        showAlert('<i class="bi bi-check-circle"></i> Template renderizado com sucesso!', 'success');
+        showAlert(`<i class="bi bi-check-circle"></i> ${t("alert.renderSuccess")}`, 'success');
       } catch (e) {
-        $("out").textContent = "❌ Erro: " + (e?.message || e);
-        showAlert('<i class="bi bi-exclamation-triangle"></i> Erro ao renderizar: ' + (e?.message || e), 'danger');
+        $("out").textContent = t("error.prefix") + (e?.message || e);
+        showAlert(`<i class="bi bi-exclamation-triangle"></i> ${t("alert.renderError", { message: e?.message || e })}`, 'danger');
       }
     }
 
@@ -640,7 +813,7 @@
       doc.open(); 
       doc.write(""); 
       doc.close();
-      showAlert('<i class="bi bi-trash"></i> Tudo limpo!', 'info');
+      showAlert(`<i class="bi bi-trash"></i> ${t("alert.clearSuccess")}`, 'info');
     }
 
     // Load example
@@ -649,7 +822,7 @@
       if (example) {
         $("vm").value = example.vm;
         $("json").value = JSON.stringify(example.json, null, 2);
-        showAlert(`<i class="bi bi-folder-open"></i> Exemplo "${exampleKey}" carregado!`, 'info');
+        showAlert(`<i class="bi bi-folder-open"></i> ${t("alert.exampleLoaded", { example: exampleKey })}`, 'info');
         renderNow();
       }
     }
@@ -658,7 +831,7 @@
     function copyHtml() {
       const html = $("out").textContent;
       navigator.clipboard.writeText(html).then(() => {
-        showAlert('<i class="bi bi-clipboard-check"></i> HTML copiado para área de transferência!', 'success');
+        showAlert(`<i class="bi bi-clipboard-check"></i> ${t("alert.copySuccess")}`, 'success');
       });
     }
 
@@ -666,7 +839,7 @@
     async function callOpenRouter(messages) {
       const apiKey = $("apiKey").value;
       if (!apiKey) {
-        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira sua API Key do OpenRouter', 'warning');
+        showAlert(`<i class="bi bi-exclamation-triangle"></i> ${t("alert.missingApiKey")}`, 'warning');
         return null;
       }
 
@@ -693,7 +866,7 @@
         const data = await response.json();
         return data.choices[0].message.content;
       } catch (error) {
-        showAlert(`<i class="bi bi-exclamation-circle"></i> Erro na chamada da API: ${error.message}`, 'danger');
+        showAlert(`<i class="bi bi-exclamation-circle"></i> ${t("alert.apiError", { message: error.message })}`, 'danger');
         return null;
       }
     }
@@ -701,13 +874,13 @@
     async function generateContext() {
       const template = $("vm").value;
       if (!template) {
-        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira um template primeiro', 'warning');
+        showAlert(`<i class="bi bi-exclamation-triangle"></i> ${t("alert.missingTemplate")}`, 'warning');
         return;
       }
 
       const btn = $("generateContext");
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gerando...';
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>${t("ai.generating")}`;
 
       const messages = [
         {
@@ -723,7 +896,7 @@
       const result = await callOpenRouter(messages);
       
       btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-magic"></i> Gerar Contexto JSON';
+      setButtonLabel("generateContext", "bi bi-magic", "ai.generateContext");
 
       if (result) {
         try {
@@ -734,9 +907,9 @@
           }
           const parsed = JSON.parse(jsonStr);
           $("json").value = JSON.stringify(parsed, null, 2);
-          showAlert('<i class="bi bi-check-circle"></i> Contexto JSON gerado com sucesso!', 'success');
+          showAlert(`<i class="bi bi-check-circle"></i> ${t("alert.contextSuccess")}`, 'success');
         } catch (e) {
-          showAlert(`<i class="bi bi-exclamation-circle"></i> Erro ao processar resposta da IA: ${e.message}`, 'danger');
+          showAlert(`<i class="bi bi-exclamation-circle"></i> ${t("alert.aiParseError", { message: e.message })}`, 'danger');
         }
       }
     }
@@ -746,13 +919,13 @@
       const context = $("json").value;
       
       if (!template) {
-        showAlert('<i class="bi bi-exclamation-triangle"></i> Por favor, insira um template primeiro', 'warning');
+        showAlert(`<i class="bi bi-exclamation-triangle"></i> ${t("alert.missingTemplate")}`, 'warning');
         return;
       }
 
       const btn = $("getInsights");
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Analisando...';
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>${t("ai.analyzing")}`;
 
       const messages = [
         {
@@ -768,12 +941,12 @@
       const result = await callOpenRouter(messages);
       
       btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-lightbulb"></i> Obter Insights sobre Template';
+      setButtonLabel("getInsights", "bi bi-lightbulb", "ai.getInsights");
 
       if (result) {
         $("insightsContent").innerHTML = result;
         $("insightsContainer").style.display = "block";
-        showAlert('<i class="bi bi-stars"></i> Insights gerados com sucesso!', 'info');
+        showAlert(`<i class="bi bi-stars"></i> ${t("alert.insightsSuccess")}`, 'info');
       }
     }
 
@@ -783,6 +956,11 @@
     $("copyHtml").onclick = copyHtml;
     $("generateContext").onclick = generateContext;
     $("getInsights").onclick = getInsights;
+    $("languageSwitcher").onchange = (event) => {
+      currentLanguage = event.target.value;
+      localStorage.setItem("velocityVmPreviewLanguage", currentLanguage);
+      applyTranslations();
+    };
 
     // Example buttons
     document.querySelectorAll('.example-btn').forEach(btn => {
@@ -792,10 +970,11 @@
     // Initial render with empty data
     $("vm").value = "";
     $("json").value = "{}";
+    applyTranslations();
     
     // Show welcome message
     setTimeout(() => {
-      showAlert('<i class="bi bi-info-circle"></i> Bem-vindo ao Velocity VM Preview! Carregue um exemplo ou insira seu próprio template.', 'info');
+      showAlert(`<i class="bi bi-info-circle"></i> ${t("alert.welcome")}`, 'info');
     }, 500);
   </script>
 </body>

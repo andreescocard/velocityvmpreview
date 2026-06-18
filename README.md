@@ -1,507 +1,229 @@
 # Velocity VM Preview
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)]()
+Velocity VM Preview is a lightweight browser tool for testing Apache Velocity
+templates without starting a backend service. Paste a `.vm` template, provide a
+JSON context, render it, and inspect both the generated HTML and the visual
+preview in one place.
 
-## 🎯 Overview
+It is especially useful for SAP Commerce Cloud teams that need to develop,
+review, or explain Velocity-based email templates and storefront fragments.
 
-**Velocity VM Preview** is an interactive web tool for testing and visualizing Velocity templates (.vm) in real-time. With an intuitive interface, you can insert Velocity templates, provide context data in JSON format, and immediately see the generated HTML, both as code and visually rendered.
+## Highlights
 
-This project was created to facilitate the development and testing of Velocity templates without the need to configure a server or complex environment - just open the HTML file in your browser!
+- Render Velocity templates directly in the browser.
+- Validate template output against editable JSON context data.
+- Preview generated HTML side by side with rendered output.
+- Load practical examples for email, product listing, segmentation, and cart
+  recovery scenarios.
+- Generate JSON context and template insights with OpenRouter AI integration.
+- Run locally with no build step and no application server.
 
-> 💡 **Perfect for**: Developers working with SAP Commerce Cloud (Hybris), teams using Velocity templates for emails, CMS, or storefront, and for technical chapter presentations.
+## Tech Stack
 
-## 🚀 Project Objectives
+- [VelocityJS](https://github.com/shepherdwind/velocity.js) for Velocity parsing
+  and rendering.
+- [Bootstrap 5.3](https://getbootstrap.com/) for responsive UI components.
+- [Bootstrap Icons](https://icons.getbootstrap.com/) for interface icons.
+- Vanilla JavaScript for the application logic.
+- [OpenRouter](https://openrouter.ai/) for optional AI-assisted context
+  generation and review.
 
-### Problems it Solves:
-- **Slow development**: Testing Velocity templates usually requires server deployment, application restart, etc.
-- **Lack of immediate feedback**: Hard to know if the template works until you see it in the final environment.
-- **Learning curve**: Developers new to Velocity need a safe environment to experiment.
+## Getting Started
 
-### Solutions:
-- ✅ Instant preview of Velocity templates
-- ✅ Fast testing without backend server requirements
-- ✅ Syntax validation and error visualization
-- ✅ Automatic context generation with AI (optional)
-- ✅ Educational tool for onboarding and technical chapters
+Clone the repository and open `index.html` in a browser:
 
-## 🛠️ Technologies Used
-
-- **[VelocityJS](https://github.com/shepherdwind/velocity.js) 2.0.6** - Velocity rendering engine in JavaScript
-- **[Bootstrap 5.3](https://getbootstrap.com/)** - CSS framework for modern and responsive UI (via CDN)
-- **Vanilla JavaScript (ES6+)** - Application logic without heavy dependencies
-- **[OpenRouter API](https://openrouter.ai/)** - Optional integration with AI models for context generation and insights
-- **HTML5 + CSS3** - Structure and styling
-
-**No build step required!** Everything works directly in the browser via CDN.
-
-## 📦 How to Run Locally
-
-### Option 1: Directly in browser (simplest)
 ```bash
-# 1. Clone the repository
 git clone https://github.com/your-username/velocityvmpreview.git
 cd velocityvmpreview
-
-# 2. Open the file in browser
-# Windows:
 start index.html
-# Mac:
-open index.html
-# Linux:
-xdg-open index.html
 ```
 
-### Option 2: With Live Server (recommended for development)
-```bash
-# If you use VS Code with Live Server extension
-# Right-click on index.html > "Open with Live Server"
+For development, you can also serve the directory through a local HTTP server:
 
-# OR use any local HTTP server:
+```bash
 npx http-server .
-# or
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+Python is also fine if you already have it installed:
+
+```bash
 python -m http.server 8000
 ```
 
-Access: `http://localhost:8000`
+## How It Works
 
-## 📖 How to Use
+1. Paste or write a Velocity template in the template editor.
+2. Add the matching JSON context in the context editor.
+3. Click render to generate the final HTML.
+4. Review the raw output and rendered preview.
+5. Optionally use the AI tools to generate missing context or inspect the
+   template for issues.
 
-### Basic Step-by-Step:
-
-1. **Insert Velocity Template**
-   - In the left textarea, type or paste your .vm template
-   - Example:
-   ```velocity
-   <h1>Hello, $customer.firstName!</h1>
-   #if($customer.isPremium)
-     <p>You are a premium customer!</p>
-   #end
-   ```
-
-2. **Insert JSON Context**
-   - In the right textarea, provide the data in JSON format
-   - Example:
-   ```json
-   {
-     "customer": {
-       "firstName": "John",
-       "isPremium": true
-     }
-   }
-   ```
-
-3. **Render**
-   - Click the "Renderizar" button
-   - See the generated HTML in the bottom left panel
-   - See the rendered result in the iframe on the right
-
-4. **Use AI Features (Optional)**
-   - Insert your OpenRouter API Key
-   - Select an AI model
-   - Click "Gerar Contexto" to automatically create JSON
-   - Click "Obter Insights" to receive improvement suggestions
-
-### Pre-loaded Examples:
-
-Click "Carregar Exemplo" and choose from:
-- **📧 Order Confirmation Email**: Transactional email template (SAP Commerce real use case)
-- **🛒 Product Listing**: Loop with product array and stock conditionals
-- **🔀 Customer Segmentation**: Conditional content based on customer type
-- **📦 Cart Abandoned Email**: Reminder email with cart items
-
-## 🔗 Connection with SAP Commerce Cloud / Commerce Storefront
-
-### Where Velocity is Used:
-
-**SAP Commerce Cloud** (formerly Hybris) uses Velocity templates in several areas:
-
-1. **Email Templates**
-   - Transactional emails (order confirmation, password recovery, abandoned cart, etc.)
-   - Newsletters and marketing campaigns
-   - Location: `/resources/impex/projectdata-email-content.impex`
-   - Real example: Order confirmation emails sent via `EmailService`
-
-2. **CMS Components**
-   - Dynamic component rendering in storefront
-   - Content personalization based on user context
-   - Example: Product tiles, promotional banners with customer-specific data
-
-3. **Page Renderers**
-   - Custom page templates
-   - Dynamic HTML generation on server-side
-   - Integration with CMS cockpit
-
-4. **Reports and Exports**
-   - Formatted document generation
-   - Data export templates
-   - Invoice generation
-
-### How This Preview Tool Helps:
-
-| Real Scenario | How the Tool Helps |
-|--------------|-------------------|
-| Create new email template | Quickly test variables like `$customer.firstName`, `$order.code`, `$product.price` |
-| Debug broken template | Isolate issues with controlled context |
-| Developer onboarding | Experiment with Velocity syntax without affecting environments |
-| Document templates | Generate visual examples for technical documentation |
-| Code review | Present template changes visually before deployment |
-| Test data structures | Validate that context objects match expected template structure |
-
-### Real Example - SAP Commerce Order Confirmation Email:
+Example template:
 
 ```velocity
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; color: #333; }
-    .header { background: #0070d2; color: white; padding: 20px; text-align: center; }
-    .content { padding: 20px; }
-    .order-summary { border: 1px solid #ddd; padding: 15px; margin: 20px 0; }
-    .item { border-bottom: 1px solid #eee; padding: 10px 0; }
-    .total { font-size: 20px; font-weight: bold; color: #0070d2; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Order Confirmed</h1>
-  </div>
-  
-  <div class="content">
-    <p>Hello $customer.firstName $customer.lastName,</p>
-    
-    <p>Thank you for your order! Your order <strong>#$order.code</strong> has been confirmed.</p>
-    
-    <div class="order-summary">
-      <h2>Order Summary</h2>
-      
-      #foreach($entry in $order.entries)
-        <div class="item">
-          <strong>$entry.product.name</strong> (SKU: $entry.product.code)<br>
-          Quantity: $entry.quantity | Unit Price: $$entry.basePrice<br>
-          <strong>Subtotal: $$entry.totalPrice</strong>
-        </div>
-      #end
-      
-      <p class="total">Order Total: $$order.totalPrice</p>
-      
-      #if($order.appliedPromotions)
-        <p style="color: green;">
-          ✓ Promotions applied: $order.appliedPromotions.size()
-        </p>
-      #end
-    </div>
-    
-    #if($order.deliveryAddress)
-      <h3>Delivery Address</h3>
-      <p>
-        $order.deliveryAddress.firstName $order.deliveryAddress.lastName<br>
-        $order.deliveryAddress.line1<br>
-        #if($order.deliveryAddress.line2)
-          $order.deliveryAddress.line2<br>
-        #end
-        $order.deliveryAddress.town, $order.deliveryAddress.region $order.deliveryAddress.postalCode<br>
-        $order.deliveryAddress.country.name
-      </p>
-    #end
-    
-    <p>Estimated delivery: $order.deliveryMode.name - $order.estimatedDeliveryDate</p>
-    
-    <hr>
-    <small>Questions? Contact us at support@example.com</small>
-  </div>
-</body>
-</html>
+<h1>Hello, $customer.firstName!</h1>
+
+#if($customer.isPremium)
+  <p>You are a premium customer.</p>
+#else
+  <p>Join the loyalty program to unlock premium benefits.</p>
+#end
 ```
 
-**Corresponding JSON Context (matching SAP Commerce Cloud data model):**
+Example context:
+
 ```json
 {
   "customer": {
     "firstName": "Sarah",
-    "lastName": "Johnson",
-    "uid": "sarah.johnson@example.com"
-  },
-  "order": {
-    "code": "00001234",
-    "created": "2024-11-23T10:30:00Z",
-    "totalPrice": "1,299.98",
-    "currency": { "isocode": "USD", "symbol": "$" },
-    "entries": [
-      {
-        "product": {
-          "code": "123456",
-          "name": "Premium Wireless Headphones",
-          "description": "Noise-canceling, 30-hour battery"
-        },
-        "quantity": 1,
-        "basePrice": "299.99",
-        "totalPrice": "299.99"
-      },
-      {
-        "product": {
-          "code": "789012",
-          "name": "Smartphone Case - Black",
-          "description": "Protective case with card slots"
-        },
-        "quantity": 2,
-        "basePrice": "24.99",
-        "totalPrice": "49.98"
-      }
-    ],
-    "deliveryAddress": {
-      "firstName": "Sarah",
-      "lastName": "Johnson",
-      "line1": "123 Main Street",
-      "line2": "Apt 4B",
-      "town": "San Francisco",
-      "region": "CA",
-      "postalCode": "94102",
-      "country": { "isocode": "US", "name": "United States" }
-    },
-    "deliveryMode": {
-      "code": "standard",
-      "name": "Standard Delivery (3-5 business days)"
-    },
-    "estimatedDeliveryDate": "Nov 28, 2024",
-    "appliedPromotions": [
-      { "code": "WELCOME10", "description": "10% off first order" }
-    ]
+    "isPremium": true
   }
 }
 ```
 
-## 🤖 AI Integration (OpenRouter)
+## SAP Commerce Cloud Use Cases
 
-### How to Configure:
+SAP Commerce Cloud projects commonly use Velocity templates for generated
+content. This preview tool helps teams test those templates before deploying
+them into a commerce environment.
 
-1. **Get API Key:**
-   - Visit [OpenRouter.ai](https://openrouter.ai/)
-   - Create an account (if needed)
-   - Generate an API Key at [keys](https://openrouter.ai/keys)
-   - Free tier available with rate limits
+Common scenarios include:
 
-2. **Configure in Application:**
-   - Expand the "🤖 Assistente IA" section
-   - Paste your API Key in the field (never saved, memory only)
-   - Select your desired model
+- Transactional emails such as order confirmation, password reset, shipment
+  updates, and abandoned cart reminders.
+- CMS and storefront fragments that depend on dynamic context data.
+- Personalized content based on customer segment, cart state, stock status, or
+  promotion eligibility.
+- Developer onboarding and chapter demos for Velocity syntax and SAP Commerce
+  email flows.
+- Code review sessions where template changes need to be shown visually.
 
-3. **Supported Models** (ranked by OpenRouter performance):
-   - `google/gemini-2.0-flash-exp:free` - Gemini 2.0 Flash (FREE, excellent performance)
-   - `anthropic/claude-3.5-sonnet` - Claude 3.5 Sonnet (top tier, recommended)
-   - `openai/gpt-4-turbo` - GPT-4 Turbo (excellent quality)
-   - `google/gemini-pro-1.5` - Gemini 1.5 Pro (great balance)
-   - `qwen/qwen-2.5-72b-instruct` - Qwen 2.5 72B (good cost-benefit)
-   - `meta-llama/llama-3.3-70b-instruct` - Llama 3.3 70B (open-source option)
+## Example: Order Confirmation Email
 
-### Available Features:
-
-#### 1. Generate JSON Context
-- **What it does**: Analyzes your template and automatically generates a JSON with all necessary variables
-- **When to use**: When you have the template but don't want to create context manually
-- **Example**: Template with `$customer.firstName`, `$order.code` → generates complete JSON structure
-
-#### 2. Get Template Insights
-- **What it does**: Analyzes template + context and provides:
-  - ✅ Potential syntax errors
-  - 💡 Improvement suggestions
-  - 🛡️ Security validations (XSS, injection risks)
-  - 📚 Best practices not followed
-  - 🎯 SAP Commerce Cloud specific recommendations
-- **When to use**: Code review, refactoring, learning, before deployment
-
-### Security:
-⚠️ **Important**: The API Key is NEVER saved to disk or sent to any server other than OpenRouter. It's kept only in memory during the browser session.
-
-## 📚 Usage Examples
-
-### Example 1: Password Recovery Email (SAP Commerce)
-**Template:**
 ```velocity
-<h1>Password Reset Request</h1>
-<p>Hello $customer.firstName,</p>
-<p>We received a request to reset your password for account: <strong>$customer.uid</strong></p>
-<p>Click the link below to reset your password:</p>
-<a href="$resetLink">Reset Password</a>
-<p>This link expires in $expiryHours hours.</p>
-<p><small>If you didn't request this, please ignore this email.</small></p>
-```
+<h1>Order Confirmed</h1>
 
-**Context:**
-```json
-{
-  "customer": {
-    "firstName": "John",
-    "uid": "john.doe@example.com"
-  },
-  "resetLink": "https://shop.example.com/reset?token=abc123",
-  "expiryHours": 24
-}
-```
+<p>Hello $customer.firstName $customer.lastName,</p>
+<p>Your order <strong>#$order.code</strong> has been confirmed.</p>
 
-### Example 2: Product Catalog with Stock Status
-**Template:**
-```velocity
-<h2>Featured Products</h2>
-<div class="product-grid">
-  #foreach($product in $products)
-    <div class="product-card">
-      <h3>$product.name</h3>
-      <p class="sku">SKU: $product.code</p>
-      <p class="price">$$product.price.value</p>
-      
-      #if($product.stock.stockLevelStatus == "inStock")
-        <span class="badge badge-success">In Stock</span>
-      #elseif($product.stock.stockLevelStatus == "lowStock")
-        <span class="badge badge-warning">Only $product.stock.stockLevel left!</span>
-      #else
-        <span class="badge badge-danger">Out of Stock</span>
-      #end
-      
-      #if($product.promotions && $product.promotions.size() > 0)
-        <p class="promo">🎉 $product.promotions.get(0).description</p>
-      #end
-    </div>
-  #end
-</div>
-```
+<h2>Order Summary</h2>
 
-**Context:**
-```json
-{
-  "products": [
-    {
-      "code": "123456",
-      "name": "Premium Laptop",
-      "price": { "value": "1299.99", "currencyIso": "USD" },
-      "stock": { "stockLevelStatus": "inStock", "stockLevel": 50 },
-      "promotions": [
-        { "code": "SAVE20", "description": "Save 20% today!" }
-      ]
-    },
-    {
-      "code": "789012",
-      "name": "Wireless Mouse",
-      "price": { "value": "29.99", "currencyIso": "USD" },
-      "stock": { "stockLevelStatus": "lowStock", "stockLevel": 3 },
-      "promotions": []
-    }
-  ]
-}
-```
-
-### Example 3: Customer Segmentation Email
-**Template:**
-```velocity
-#if($customer.segment == "VIP" && $customer.loyaltyPoints > 5000)
-  <div class="vip-exclusive">
-    <h2>🌟 VIP Exclusive Offer</h2>
-    <p>Dear $customer.title $customer.lastName,</p>
-    <p>You have <strong>$customer.loyaltyPoints points</strong>. Redeem now for exclusive rewards!</p>
-    <a href="$rewardsLink" class="btn-gold">View VIP Rewards</a>
+#foreach($entry in $order.entries)
+  <div class="item">
+    <strong>$entry.product.name</strong><br>
+    Quantity: $entry.quantity<br>
+    Subtotal: $$entry.totalPrice
   </div>
-#elseif($customer.segment == "Premium")
-  <div class="premium-offer">
-    <h2>⭐ Premium Member Benefits</h2>
-    <p>Hi $customer.firstName,</p>
-    <p>Earn more points to unlock VIP status. Current: $customer.loyaltyPoints points</p>
-  </div>
-#else
-  <div class="standard-offer">
-    <h2>Join Our Loyalty Program</h2>
-    <p>Hello $customer.firstName,</p>
-    <p>Sign up today and start earning rewards on every purchase!</p>
-  </div>
+#end
+
+<p><strong>Total:</strong> $$order.totalPrice</p>
+
+#if($order.deliveryAddress)
+  <h2>Delivery Address</h2>
+  <p>
+    $order.deliveryAddress.line1<br>
+    $order.deliveryAddress.town,
+    $order.deliveryAddress.region
+    $order.deliveryAddress.postalCode
+  </p>
 #end
 ```
 
-**Context:**
 ```json
 {
   "customer": {
-    "title": "Ms.",
-    "firstName": "Emily",
-    "lastName": "Chen",
-    "segment": "VIP",
-    "loyaltyPoints": 7500
+    "firstName": "Sarah",
+    "lastName": "Johnson"
   },
-  "rewardsLink": "https://shop.example.com/rewards"
+  "order": {
+    "code": "00001234",
+    "totalPrice": "349.97",
+    "entries": [
+      {
+        "product": {
+          "name": "Premium Wireless Headphones"
+        },
+        "quantity": 1,
+        "totalPrice": "299.99"
+      },
+      {
+        "product": {
+          "name": "Smartphone Case"
+        },
+        "quantity": 2,
+        "totalPrice": "49.98"
+      }
+    ],
+    "deliveryAddress": {
+      "line1": "123 Main Street",
+      "town": "San Francisco",
+      "region": "CA",
+      "postalCode": "94102"
+    }
+  }
 }
 ```
 
-## 🗺️ Roadmap / Next Steps
+## AI Features
 
-### Planned Features:
+The OpenRouter integration is optional. When configured with an API key, it can:
 
-- [ ] **Template Library**: Save and load favorite templates
-- [ ] **Export/Import**: Export templates as `.vm` and contexts as `.json`
-- [ ] **Sharing**: Generate shareable link with template + context (URL encoding)
-- [ ] **History**: Navigate through previous versions (using localStorage)
-- [ ] **Syntax Highlighting**: Color-coded editor for better readability
-- [ ] **Advanced Validation**: Lint templates with inline suggestions
-- [ ] **Themes**: Light/dark mode
-- [ ] **Multi-language**: Interface in English and Portuguese
-- [ ] **Comparison**: Visual diff between two template versions
-- [ ] **Automated Testing**: Test suite for critical templates
-- [ ] **SAP Commerce Integration**: Direct import from impex files
+- Generate a complete JSON context from the variables found in a template.
+- Suggest improvements for template structure and readability.
+- Flag likely syntax issues.
+- Highlight security concerns such as unsafe HTML injection.
+- Provide SAP Commerce-oriented review notes.
 
-### Technical Improvements:
+The API key is kept in browser memory for the current session only. It is not
+written to disk by this application.
 
-- [ ] PWA (Progressive Web App) for offline use
-- [ ] Service Worker for asset caching
-- [ ] Data compression for sharing
-- [ ] GitHub Gist integration for cloud storage
-- [ ] VS Code plugin/extension
-- [ ] Real-time collaboration (multiplayer mode)
+## Project Structure
 
-## 🤝 How to Contribute
+```text
+.
+|-- index.html      # Complete single-file application
+|-- README.md       # Project documentation
+|-- .gitignore      # Local ignore rules
+`-- tasks/          # Local task notes and scratch work, ignored by Git
+```
 
-Contributions are welcome! To contribute:
+## Roadmap
 
-1. Fork this repository
-2. Create a branch for your feature (`git checkout -b feature/MyFeature`)
-3. Commit your changes (`git commit -m 'Add: MyFeature'`)
-4. Push to the branch (`git push origin feature/MyFeature`)
-5. Open a Pull Request
+- Template library with save and load support.
+- Export and import for `.vm` templates and `.json` context files.
+- Shareable links with compressed template and context data.
+- Template history stored locally in the browser.
+- Syntax highlighting for Velocity and JSON editors.
+- Light and dark themes.
+- SAP Commerce impex import helpers.
+- Automated regression tests for critical templates.
 
-### Guidelines:
-- Keep the project without build step (CDN only)
-- Write clean and commented code
-- Test across different browsers
-- Update this README if adding features
-- Follow existing code style
+## Contributing
 
-## 📄 License
+1. Fork the repository.
+2. Create a feature branch.
+3. Make a focused change.
+4. Test the application in a browser.
+5. Update this README when behavior or setup changes.
+6. Open a pull request with a concise description and screenshots when useful.
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+Please keep the project simple: no build step, no backend dependency, and no
+heavy framework unless the project direction changes intentionally.
 
-**MIT License Summary:**
-- ✅ Commercial use allowed
-- ✅ Modification allowed
-- ✅ Distribution allowed
-- ✅ Private use allowed
-- ⚠️ No warranty (use at your own risk)
+## License
 
----
+This project is licensed under the MIT License. See `LICENSE` for details.
 
-## 📞 Contact and Support
+## Acknowledgments
 
-**Questions or suggestions?**
-- Open an [Issue](https://github.com/your-username/velocityvmpreview/issues)
-- Contact via internal Slack (channel #chapter-frontend)
-
----
-
-## 🙏 Acknowledgments
-
-- [Apache Velocity](https://velocity.apache.org/) - The original template engine
-- [VelocityJS](https://github.com/shepherdwind/velocity.js) - JavaScript implementation
-- [Bootstrap](https://getbootstrap.com/) - UI framework
-- [OpenRouter](https://openrouter.ai/) - AI integration platform
-
----
-
-**Developed with ❤️ to make working with Velocity Templates easier**
-
-*Last updated: November 2024*
+- [Apache Velocity](https://velocity.apache.org/)
+- [VelocityJS](https://github.com/shepherdwind/velocity.js)
+- [Bootstrap](https://getbootstrap.com/)
+- [OpenRouter](https://openrouter.ai/)
